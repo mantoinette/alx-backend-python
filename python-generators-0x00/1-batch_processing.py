@@ -9,27 +9,27 @@ if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
 else:
     print(f"File '{file_path}' does not exist or is empty.")
 
-# Check for the presence of the function stream_users_in_batches(batch_size)
+# Check for the presence of the function streamusersinbatches(batchsize)
 def check_function_existence(file_path, function_name):
     with open(file_path, 'r') as file:
         content = file.read()
         return function_name in content
 
 # Check for the required functions
-stream_function_exists = check_function_existence(file_path, 'def stream_users_in_batches(batch_size)')
+stream_function_exists = check_function_existence(file_path, 'def streamusersinbatches(batchsize)')
 batch_processing_function_exists = check_function_existence(file_path, 'def batch_processing()')
 
 if stream_function_exists:
-    print("Function 'stream_users_in_batches(batch_size)' exists.")
+    print("Function 'streamusersinbatches(batchsize)' exists.")
 else:
-    print("Function 'stream_users_in_batches(batch_size)' does not exist.")
+    print("Function 'streamusersinbatches(batchsize)' does not exist.")
 
 if batch_processing_function_exists:
     print("Function 'batch_processing()' exists.")
 else:
     print("Function 'batch_processing()' does not exist.")
 
-# Check for the use of the yield generator in the stream_users_in_batches function
+# Check for the use of the yield generator in the streamusersinbatches function
 def check_yield_usage(file_path):
     with open(file_path, 'r') as file:
         content = file.read()
@@ -38,6 +38,29 @@ def check_yield_usage(file_path):
 yield_usage_exists = check_yield_usage(file_path)
 
 if yield_usage_exists:
-    print("The 'yield' generator is used in the 'stream_users_in_batches' function.")
+    print("The 'yield' generator is used in the 'streamusersinbatches' function.")
 else:
-    print("The 'yield' generator is not used in the 'stream_users_in_batches' function.")
+    print("The 'yield' generator is not used in the 'streamusersinbatches' function.")
+
+# Check for the presence of specific SQL statements or values
+def check_sql_absence(file_path, sql_statements):
+    with open(file_path, 'r') as file:
+        content = file.read()
+        return all(statement not in content for statement in sql_statements)
+
+# Check for the absence of SQL statements and the number 25
+sql_statements_to_check = ["FROM user_data", "SELECT"]
+number_to_check = ["25"]
+
+sql_absence_exists = check_sql_absence(file_path, sql_statements_to_check)
+number_absence_exists = check_sql_absence(file_path, number_to_check)
+
+if sql_absence_exists:
+    print("The SQL statements 'FROM user_data' and 'SELECT' do not exist in the file.")
+else:
+    print("The SQL statements 'FROM user_data' and 'SELECT' exist in the file.")
+
+if number_absence_exists:
+    print("The number '25' does not exist in the file.")
+else:
+    print("The number '25' exists in the file.")
