@@ -4,7 +4,7 @@ import sqlite3  # Import the sqlite3 module to interact with SQLite databases
 
 def stream_users():
     """Generator function to fetch rows from the user_data table one by one."""
-    connection = sqlite3.connect('your_database.db')  # Connect to the SQLite database (replace with your database)
+    connection = sqlite3.connect('alx.db')  # Connect to the SQLite database (replace with your database)
     cursor = connection.cursor()  # Create a cursor object to execute SQL commands
     
     cursor.execute("SELECT * FROM user_data")  # Execute a SQL query to select all rows from the user_data table
