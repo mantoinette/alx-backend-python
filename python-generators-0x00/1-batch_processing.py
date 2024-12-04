@@ -19,6 +19,9 @@ def check_function_existence(file_path, function_name):
 stream_function_exists = check_function_existence(file_path, 'def streamusersinbatches(batchsize)')
 batch_processing_function_exists = check_function_existence(file_path, 'def batch_processing()')
 
+# Check for the absence of the function stream_users_in_batches
+stream_users_in_batches_absent = not check_function_existence(file_path, 'def stream_users_in_batches')
+
 if stream_function_exists:
     print("Function 'streamusersinbatches(batchsize)' exists.")
 else:
@@ -28,6 +31,11 @@ if batch_processing_function_exists:
     print("Function 'batch_processing()' exists.")
 else:
     print("Function 'batch_processing()' does not exist.")
+
+if stream_users_in_batches_absent:
+    print("Function 'stream_users_in_batches' does not exist.")
+else:
+    print("Function 'stream_users_in_batches' exists.")
 
 # Check for the use of the yield generator in the streamusersinbatches function
 def check_yield_usage(file_path):
