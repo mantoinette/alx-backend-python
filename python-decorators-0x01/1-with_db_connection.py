@@ -1,5 +1,14 @@
+import os
 import sqlite3 
 import functools
+
+# Check if the file exists and is not empty
+file_path = 'alx-backend-python/python-decorators-0x01/1-with_db_connection.py'
+
+if os.path.isfile(file_path) and os.path.getsize(file_path) > 0:
+    print("The file exists and is not empty.")
+else:
+    print("The file either does not exist or is empty.")
 
 def with_db_connection(func):
     """Decorator that opens a database connection and closes it after the function call."""
