@@ -1,7 +1,8 @@
 def paginate_users(page_size, offset):
     """Simulate fetching users from a data source."""
+    # Simulating SQL-like pagination
     users = range(1, 101)  # Example user IDs from 1 to 100
-    return users[offset:offset + page_size]
+    return users[offset:offset + page_size]  # This simulates "SELECT * FROM user_data LIMIT page_size OFFSET offset"
 
 def lazy_paginate(page_size):
     """Generator function to yield users in pages."""
