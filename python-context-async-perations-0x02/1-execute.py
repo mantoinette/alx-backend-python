@@ -10,7 +10,7 @@ class ExecuteQuery:
         return self.execute_query()  # Execute the query and return the result
 
     def __exit__(self, exc_type, exc_value, traceback):
-        # Close the database connection here
+        # Close the database connection herels
         if self.connection:
             self.connection.close()  # Ensure the connection is closed
 
