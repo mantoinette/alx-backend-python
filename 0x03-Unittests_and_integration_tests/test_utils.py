@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
 """
-This module contains unit tests for the access_nested_map function.
+This module contains unit tests for the access_nested_map function and utils.get_json.
 """
 
 import unittest
-from parameterized import parameterized
+from unittest.mock import patch, Mock
+import requests
+from utils import access_nested_map, get_json  # Adjust the import based on your project structure
 
 def access_nested_map(nested_map, path):
     """
@@ -60,6 +62,37 @@ class TestAccessNestedMap(unittest.TestCase):
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
         self.assertEqual(str(context.exception), "Key not found")
+
+class TestGetJson(unittest.TestCase):
+    """
+    Test case for the utils.get_json function.
+    """
+
+    @patch('requests.get')
+    def test_get_json(self, mock_get):
+        # Define test inputs
+        test_cases = [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False}),
+        ]
+
+        for test_url, test_payload in test_cases:
+            # Set up the mock to return a response with the desired JSON
+            mock_response = Mock()
+            mock_response.json.return_value = test_payload
+            mock_get.return_value = mock_response
+
+            # Call the get_json function
+            result = get_json(test_url)
+
+            # Assert that the mocked get method was called once with the correct URL
+            mock_get.assert_called_once_with(test_url)
+
+            # Assert that the result is equal to the expected payload
+            self.assertEqual(result, test_payload)
+
+            # Reset the mock for the next iteration
+            mock_get.reset_mock()
 
 # To run the tests
 if __name__ == "__main__":
