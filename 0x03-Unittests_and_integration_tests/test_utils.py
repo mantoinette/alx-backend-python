@@ -20,7 +20,7 @@ def access_nested_map(nested_map, path):
     """
     for key in path:
         if key not in nested_map:
-            raise KeyError("Key not found")  # Ensure this message matches your test
+            raise KeyError("Key not found")
         nested_map = nested_map[key]
     return nested_map
 
@@ -50,9 +50,16 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a", "b")),
     ])
     def test_access_nested_map_exception(self, nested_map, path):
+        """
+        Test access_nested_map for exceptions.
+
+        Args:
+            nested_map (dict): The nested map to test.
+            path (tuple): The path to access in the nested map.
+        """
         with self.assertRaises(KeyError) as context:
             access_nested_map(nested_map, path)
-        self.assertEqual(str(context.exception), "Key not found")  # Ensure this message matches your implementation
+        self.assertEqual(str(context.exception), "Key not found")
 
 # To run the tests
 if __name__ == "__main__":
