@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
+"""
+Unit tests for utils module.
+"""
+
 import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized
 from utils import access_nested_map, get_json, memoize  # Assuming this is the correct import
+
 
 class TestAccessNestedMap(unittest.TestCase):
     @parameterized.expand([
@@ -13,6 +18,7 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map(self, nested_map, path, expected):
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
+
     @parameterized.expand([
         ({}, ("a",)),  # Test case 1
         ({"a": 1}, ("a", "b")),  # Test case 2
@@ -20,6 +26,7 @@ class TestAccessNestedMap(unittest.TestCase):
     def test_access_nested_map_exception(self, nested_map, path):
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
+
 
 class TestGetJson(unittest.TestCase):
     @parameterized.expand([
@@ -37,8 +44,9 @@ class TestGetJson(unittest.TestCase):
         result = get_json(test_url)
 
         # Assertions
-        mock_get.assert_called_once_with(test_url)  # Check if requests.get was called with the correct URL
+        mock_get.assert_called_once_with(test_url)  # Check if requests.get was called
         self.assertEqual(result, test_payload)  # Check if the result matches the expected payload
+
 
 class TestMemoize(unittest.TestCase):
     @patch('utils.TestClass.a_method')  # Mocking a_method
@@ -60,9 +68,10 @@ class TestMemoize(unittest.TestCase):
         result_second_call = test_instance.a_property()
 
         # Assertions
-        self.assertEqual(result_first_call, 42)  
-        self.assertEqual(result_second_call, 42)  
-        mock_a_method.assert_called_once()  
+        self.assertEqual(result_first_call, 42)  # Check the result
+        self.assertEqual(result_second_call, 42)  # Check the result again
+        mock_a_method.assert_called_once()  # Ensure a_method was called only once
+
 
 if __name__ == '__main__':
     unittest.main()
