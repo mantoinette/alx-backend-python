@@ -5,7 +5,7 @@ Unit tests for the utils module.
 import unittest
 from unittest.mock import patch
 from parameterized import parameterized
-from client import GithubOrgClient  # Adjust the import based on your project structure
+from client import GithubOrgClient  
 
 
 class TestGithubOrgClient(unittest.TestCase):
