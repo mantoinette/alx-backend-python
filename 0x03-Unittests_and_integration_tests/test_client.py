@@ -3,7 +3,7 @@
 Integration tests for the GithubOrgClient class.
 """
 import unittest  # Import the unittest module for creating unit tests
-from unittest.mock import patch  # Import patch for mocking objects in tests
+from unittest.mock import patch, Mock  # Import patch and Mock for mocking objects in tests
 from parameterized import parameterized_class  # Import parameterized_class for parameterized tests
 from client import GithubOrgClient  # Import the GithubOrgClient class from the client module
 from fixtures import org_payload, repos_payload, expected_repos, apache2_repos  # Import fixtures
@@ -36,14 +36,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):  # Define the integrati
 
     @staticmethod
     def mock_response_with_json(payload):  # Helper method to create a mock response
-        mock_response = patch('requests.Response')  # Create a mock response object
-        mock_response.json = lambda: payload  # Mock the json method to return the payload
+        mock_response = Mock()  # Create a mock response object
+        mock_response.json.return_value = payload  # Mock the json method to return the payload
         return mock_response
 
     def test_public_repos(self):  # Test the public_repos method
         client = GithubOrgClient("google")  # Create an instance of GithubOrgClient
         repos = client.public_repos()  # Call the public_repos method
         self.assertEqual(repos, self.expected_repos)  # Assert that the returned repos match the expected list
+
+    def test_public_repos_with_license(self):  # Test the public_repos method with a license filter
+        client = GithubOrgClient("google")  # Create an instance of GithubOrgClient
+        repos = client.public_repos(license="apache-2.0")  # Call the public_repos method with a license filter
+        self.assertEqual(repos, self.apache2_repos)  # Assert that the returned repos match the expected list with the license filter
 
 
 if __name__ == '__main__':  # Check if the script is being run directly
