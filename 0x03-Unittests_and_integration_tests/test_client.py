@@ -64,6 +64,8 @@ class TestGithubOrgClient(unittest.TestCase):  # Define a test case class
             client = GithubOrgClient("google")  # Create an instance of GithubOrgClient
             repos = client.public_repos()  # Call the public_repos method
 
+            print(f"Retrieved repos: {repos}")  # Debugging statement to check retrieved repos
+
             # Assert that the list of repos matches the expected output
             self.assertEqual(repos, ["repo1", "repo2", "repo3"])  # Check if the returned repos match the expected list
             # Assert that get_json was called once
