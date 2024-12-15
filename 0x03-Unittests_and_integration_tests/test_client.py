@@ -8,7 +8,7 @@ from parameterized import parameterized  # Import parameterized for parameterize
 from client import GithubOrgClient  # Import the GithubOrgClient class from the client module
 
 
-class TestGithubOrgClient(unittest.TestCase):  # Define a test case class that inherits from unittest.TestCase
+class TestGithubOrgClient(unittest.TestCase):  # Define a test case class
 
     @parameterized.expand([  # Use parameterized.expand to define multiple test cases
         ("google", {  # First test case for the organization "google"
@@ -20,20 +20,20 @@ class TestGithubOrgClient(unittest.TestCase):  # Define a test case class that i
             "repos_url": "https://api.github.com/orgs/abc/repos"  # Expected repos URL
         }),
     ])
-    @patch('client.GithubOrgClient.get_json')  # Mock the get_json method in GithubOrgClient
+    @patch('client.GithubOrgClient.get_json')  # Mock the get_json method
     def test_org(self, org_name, expected_value, mock_get_json):  # Define the test method
         # Mock the return value of get_json
         mock_get_json.return_value = expected_value  # Set the mock to return the expected value
 
         client = GithubOrgClient(org_name)  # Create an instance of GithubOrgClient
-        result = client.org(org_name)  # Call the org method with the organization name
+        result = client.org(org_name)  # Call the org method
 
         # Assert that the result matches the expected value
         self.assertEqual(result, expected_value)  # Check if the result is as expected
         # Assert that get_json was called once with the expected argument
         mock_get_json.assert_called_once_with(org_name)  # Verify that get_json was called correctly
 
-    @patch('client.GithubOrgClient.org')  # Mock the org method in GithubOrgClient
+    @patch('client.GithubOrgClient.org')  # Mock the org method
     def test_public_repos_url(self, mock_org):  # Define the test method
         # Define a known payload
         mock_org.return_value = {  # Set the mock to return a specific payload
