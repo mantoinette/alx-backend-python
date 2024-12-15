@@ -49,13 +49,10 @@ class TestGithubOrgClient(unittest.TestCase):  # Define a test case class
         self.assertEqual(result, "https://api.github.com/orgs/google/repos")  # Check if the result is as expected
 
     @patch('client.GithubOrgClient.get_json')  # Mock get_json method
-    def test_public_repos(self, mock_get_json):  # Define the test method
-        # Mock the return value of get_json
-        mock_get_json.return_value = [  # Set the mock to return a list of repositories
-            {"name": "repo1"},  # First repository
-            {"name": "repo2"},  # Second repository
-            {"name": "repo3"},  # Third repository
-        ]
+   
+     def public_repos(self):
+           """Returns a list of public repositories for the organization."""
+           return [repo['name'] for repo in self.get_json(self._public_repos_url)]
 
         # Mock the _public_repos_url property
         with patch('client.GithubOrgClient._public_repos_url', new_callable=property) as mock_public_repos_url:
