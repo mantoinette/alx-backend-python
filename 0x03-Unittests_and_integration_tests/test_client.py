@@ -64,14 +64,21 @@ class TestGithubOrgClient(unittest.TestCase):  # Define a test case class
             client = GithubOrgClient("google")  # Create an instance of GithubOrgClient
             repos = client.public_repos()  # Call the public_repos method
 
-            print(f"Retrieved repos: {repos}")  # Debugging statement to check retrieved repos
-
             # Assert that the list of repos matches the expected output
             self.assertEqual(repos, ["repo1", "repo2", "repo3"])  # Check if the returned repos match the expected list
             # Assert that get_json was called once
             mock_get_json.assert_called_once()  # Verify that get_json was called once
             # Assert that the mocked property was accessed
             mock_public_repos_url.assert_called_once()  # Verify that the _public_repos_url property was accessed
+
+    @parameterized.expand([  # Parameterize the test with different inputs
+        ({"license": {"key": "my_license"}}, "my_license", True),  # Test case where the license matches
+        ({"license": {"key": "other_license"}}, "my_license", False),  # Test case where the license does not match
+    ])
+    def test_has_license(self, repo, license_key, expected):  # Define the test method
+        client = GithubOrgClient("google")  # Create an instance of GithubOrgClient
+        result = client.has_license(repo, license_key)  # Call the has_license method
+        self.assertEqual(result, expected)  # Assert that the result matches the expected value
 
 
 if __name__ == '__main__':  # Check if the script is being run directly
