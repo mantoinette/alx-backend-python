@@ -14,13 +14,13 @@ class TestGithubOrgClient(unittest.TestCase):
     @patch('client.GithubOrgClient.get_json')  # Adjust the path based on your project structure
     def test_org(self, org_name, expected_value, mock_get_json):
         # Mock the return value of get_json
-        mock_get_json.return_value = expected_value
+        mock_get_json.return_value = expected_value  # Ensure this matches the expected structure
         
         client = GithubOrgClient(org_name)
         result = client.org(org_name)
         
         # Assert that the result matches the expected value
-        self.assertEqual(result, expected_value)
+        self.assertEqual(result, expected_value)  # Ensure result is correctly derived
         # Assert that get_json was called once with the expected argument
         mock_get_json.assert_called_once_with(org_name)
 
