@@ -1,9 +1,15 @@
-```alx-backend-python/0x03-Unittests_and_integration_tests/test_client.py
+import unittest
+from unittest.mock import patch
+from parameterized import parameterized
+from client import GithubOrgClient  # Adjust the import based on your project structure
+
 class TestGithubOrgClient(unittest.TestCase):
     
     @parameterized.expand([
-        ("google", {"org": "google", "repos_url": "https://api.github.com/orgs/google/repos"}),
-        ("abc", {"org": "abc", "repos_url": "https://api.github.com/orgs/abc/repos"}),
+        ("google", {"org": "google", 
+                     "repos_url": "https://api.github.com/orgs/google/repos"}),
+        ("abc", {"org": "abc", 
+                  "repos_url": "https://api.github.com/orgs/abc/repos"}),
     ])
     @patch('client.GithubOrgClient.get_json')  # Adjust the path based on your project structure
     def test_org(self, org_name, expected_value, mock_get_json):
@@ -23,3 +29,6 @@ class TestGithubOrgClient(unittest.TestCase):
         self.assertEqual(len(result), len(expected_value))  # Check length if necessary
 
 # ... existing code ...
+
+if __name__ == '__main__':
+    unittest.main()
