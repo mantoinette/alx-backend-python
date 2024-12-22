@@ -1,8 +1,4 @@
-import unittest
-from unittest.mock import patch
-from parameterized import parameterized
-from client import GithubOrgClient  # Adjust the import based on your project structure
-
+```alx-backend-python/0x03-Unittests_and_integration_tests/test_client.py
 class TestGithubOrgClient(unittest.TestCase):
     
     @parameterized.expand([
@@ -22,5 +18,8 @@ class TestGithubOrgClient(unittest.TestCase):
         # Assert that get_json was called once with the expected argument
         mock_get_json.assert_called_once_with(org_name)
 
-if __name__ == '__main__':
-    unittest.main()
+        # Additional assertions can be added here if needed
+        # For example, check if the length of the result matches expected length
+        self.assertEqual(len(result), len(expected_value))  # Check length if necessary
+
+# ... existing code ...
