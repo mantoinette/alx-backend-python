@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 import unittest
 from unittest.mock import patch, Mock
-from ..utils import memoize  # Adjust the import based on your project structure
+   from utils import memoize # Adjust the import based on your project structure
 
 class TestMemoize(unittest.TestCase):
     """TestMemoize class to test memoization functionality."""
