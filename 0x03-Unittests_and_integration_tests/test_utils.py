@@ -1,3 +1,20 @@
+"""
+test_utils.py
+
+This module contains unit tests for utility functions defined in the utils module.
+
+Tests included:
+- TestAccessNestedMap: Tests for the access_nested_map function, including
+  cases for valid paths and handling of missing keys.
+- TestGetJson: Tests for the get_json function, including mocking HTTP requests
+  and verifying the returned JSON payload.
+- TestMemoize: Tests for the memoization functionality, ensuring that
+  decorated methods are only called once per unique input.
+
+Usage:
+    Run this module directly to execute all unit tests.
+"""
+
 #!/usr/bin/env python3  # Shebang line to specify the interpreter
 import unittest  # Importing the unittest module for testing
 from unittest.mock import patch, Mock  # Importing patch and Mock for mocking in tests
