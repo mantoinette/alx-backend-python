@@ -40,8 +40,6 @@ class TestGetJson(unittest.TestCase):
         mock_get.assert_called_once_with(test_url)  # Check if requests.get was called with the correct URL
         self.assertEqual(result, test_payload)  # Check if the result matches the expected payload
 
-import unittest
-
 class TestUtils(unittest.TestCase):
     
     def test_example(self):
