@@ -22,6 +22,8 @@ from parameterized import parameterized  # Importing parameterized for parameter
 from utils import access_nested_map, get_json, memoize  # Importing functions to be tested
 
 class TestAccessNestedMap(unittest.TestCase):  # Test case class for access_nested_map function
+    """TestAccessNestedMap class to test access_nested_map function."""
+    
     @parameterized.expand([  # Using parameterized to run multiple test cases
         ({"a": 1}, ("a",), 1),  # Test case with a simple dictionary
         ({"a": {"b": 2}}, ("a",), {"b": 2}),  # Test case with nested dictionary
@@ -39,6 +41,8 @@ class TestAccessNestedMap(unittest.TestCase):  # Test case class for access_nest
             access_nested_map(nested_map, path)  # Call the function that should raise the exception
 
 class TestGetJson(unittest.TestCase):  # Test case class for get_json function
+    """TestGetJson class to test get_json function."""
+    
     @parameterized.expand([  # Using parameterized to run multiple test cases
         ("http://example.com", {"payload": True}),  # Test case with a URL and expected payload
         ("http://holberton.io", {"payload": False}),  # Another test case with a different URL
@@ -55,6 +59,8 @@ class TestGetJson(unittest.TestCase):  # Test case class for get_json function
         self.assertEqual(result, test_payload)  # Assert the result matches the expected payload
 
 class TestMemoize(unittest.TestCase):  # Test case class for memoization
+    """TestMemoize class to test memoization functionality."""
+    
     @patch('utils.TestClass.a_method')  # Mocking a_method in TestClass
     def test_memoize(self, mock_a_method):  # Test method for memoization
         class TestClass:  # Defining a test class for memoization
