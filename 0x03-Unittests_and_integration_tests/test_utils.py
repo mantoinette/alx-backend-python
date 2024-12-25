@@ -37,8 +37,8 @@ class TestGetJson(unittest.TestCase):
         result = get_json(test_url)
 
         # Assertions
-        mock_get.assert_called_once_with(test_url)  # Check if requests.get was called with the correct URL
-        self.assertEqual(result, test_payload)  # Check if the result matches the expected payload
+        mock_get.assert_called_once_with(test_url)  #
+        self.assertEqual(result, test_payload) 
 
 class TestUtils(unittest.TestCase):
     
@@ -55,8 +55,6 @@ class TestUtils(unittest.TestCase):
         )  # E501
         self.assertTrue("long" in another_long_variable_name)
 
-# Update the long lines in the following section
-# Ensure that the comments and strings do not exceed 79 characters
 # ... existing code ...
 
 if __name__ == '__main__':
