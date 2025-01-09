@@ -1,1 +1,21 @@
-Hello there?, I am working on the Django Middleware 
+from . import models
+
+"""
+This file serves as a placeholder for the Django Messaging App project.
+It includes essential information and setup instructions.
+"""
+
+# Import necessary modules
+import os
+
+# Define project settings
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Example of a simple Django model
+class Message(models.Model):
+    sender = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Message from {self.sender.username} at {self.timestamp}"
