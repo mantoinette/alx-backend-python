@@ -1,0 +1,8 @@
+   import logging
+   from datetime import datetime
+
+   logging.basicConfig(
+       filename='requests.log',
+       level=logging.INFO,
+       format='%(asctime)s - %(message)s',
+   )
