@@ -14,7 +14,7 @@ def with_db_connection(func):
     """Decorator that opens a database connection and closes it after the function call."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        conn = sqlite3.connect('your_database.db')  # Specify your database file
+        conn = sqlite3.connect('anto.db')  # Specify your database file
         try:
             return func(conn, *args, **kwargs)
         finally:
