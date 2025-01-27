@@ -1,9 +1,9 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters  # Import filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .models import Conversation, Message
-from .serializers import ConversationSerializer, MessageSerializer, CustomUserSerializer
+from .serializers import ConversationSerializer, MessageSerializer
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -12,11 +12,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
     """
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]  # Add filters
+    search_fields = ["participants__username"]  # Search by participant username
+    ordering_fields = ["created_at", "updated_at"]  # Order by timestamps
 
     def create(self, request, *args, **kwargs):
-        """
-        Create a new conversation with participants.
-        """
         participant_ids = request.data.get("participant_ids", [])
         if len(participant_ids) < 2:
             return Response(
@@ -33,9 +33,6 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"])
     def send_message(self, request, pk=None):
-        """
-        Send a message to an existing conversation.
-        """
         conversation = get_object_or_404(Conversation, pk=pk)
         sender_id = request.data.get("sender_id")
         message_body = request.data.get("message_body")
@@ -62,11 +59,11 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]  # Add filters
+    search_fields = ["sender__username", "conversation__id"]  # Search by sender or conversation
+    ordering_fields = ["created_at"]  # Order by creation time
 
     def create(self, request, *args, **kwargs):
-        """
-        Prevent direct message creation; messages should only be created via a conversation.
-        """
         return Response(
             {"error": "Messages must be created via a conversation."},
             status=status.HTTP_405_METHOD_NOT_ALLOWED,
