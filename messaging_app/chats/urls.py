@@ -12,4 +12,7 @@ conversation_router = routers.NestedDefaultRouter(router, r'conversations', look
 conversation_router.register(r'messages', MessageViewSet, basename='conversation-message')
 
 # Combine the two routers: main and nested
-urlpatterns = router.urls + conversation_router.urls
+urlpatterns = [
+    path('api/', include(router.urls)),  # Include the main router URLs
+    path('api/', include(conversation_router.urls)),  # Include the nested router URLs
+]
