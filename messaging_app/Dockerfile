@@ -1,20 +1,20 @@
-# Use Python 3.9 as the base image
+# Use a base Python image (python 3.10)
 FROM python:3.10
 
-# Update package lists and install dependencies
-RUN apt-get update && apt-get install -y libdbus-1-dev build-essential python3-dev
-
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy your project files to the container
-COPY . /app
+# Copy the requirements.txt file into the container
+COPY requirements.txt .
 
-# Install Python dependencies from requirements.txt
-RUN pip install -r requirements.txt
+# Install the dependencies from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port that the app will run on (optional)
+# Copy the entire app code into the container
+COPY . .
+
+# Expose port 8000 (default port for Django)
 EXPOSE 8000
 
-# Command to run the application (adjust it as per your app's entry point)
-CMD ["python", "app.py"]
+# Command to run your Django app
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
