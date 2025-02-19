@@ -1,0 +1,8 @@
+asgiref==3.8.1
+Django==5.1.5
+django-rest-framework-nested==0.0.1
+djangorestframework==3.15.2
+drf-nested-routers==0.94.1
+pillow==11.1.0
+sqlparse==0.5.3
+djangorestframework-simplejwt>=4.8.0
