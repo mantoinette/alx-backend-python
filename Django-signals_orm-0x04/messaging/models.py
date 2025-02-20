@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
@@ -7,6 +8,8 @@ class Message(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    edited = models.BooleanField(default=False)
+    last_edited = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"From {self.sender} to {self.receiver}"
@@ -19,3 +22,15 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"Notification for {self.user} - {self.message}"
+
+class MessageHistory(models.Model):
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, related_name='history')
+    old_content = models.TextField()
+    edited_at = models.DateTimeField(auto_now_add=True)
+    edited_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        ordering = ['-edited_at']
+
+    def __str__(self):
+        return f"Edit history for message {self.message.id} at {self.edited_at}"
