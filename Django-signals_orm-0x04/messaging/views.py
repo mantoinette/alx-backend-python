@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
 from .models import Message
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 
@@ -35,19 +36,44 @@ def delete_user(request):
         return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
-def send_message(request):
+@cache_page(60)  # Cache the view for 60 seconds
+def conversation_messages(request, conversation_id):
+    """Display messages in a conversation with caching"""
+    messages = (
+        Message.objects
+        .filter(conversation_id=conversation_id)
+        .select_related('sender')
+        .order_by('timestamp')
+    )
+    
+    messages_data = [{
+        'id': msg.id,
+        'sender': msg.sender.username,
+        'content': msg.content,
+        'timestamp': msg.timestamp.isoformat(),
+        'is_read': msg.is_read
+    } for msg in messages]
+    
+    return JsonResponse({
+        'conversation_id': conversation_id,
+        'messages': messages_data
+    })
+
+@login_required
+def send_message(request, conversation_id):
+    """Send a new message (not cached)"""
     if request.method == 'POST':
         content = request.POST.get('content')
-        receiver_id = request.POST.get('receiver')
-        parent_id = request.POST.get('parent_message')  # For replies
-        
         message = Message.objects.create(
+            conversation_id=conversation_id,
             sender=request.user,
-            receiver_id=receiver_id,
-            content=content,
-            parent_message_id=parent_id
+            content=content
         )
-        return JsonResponse({'status': 'success'})
+        return JsonResponse({
+            'status': 'success',
+            'message_id': message.id
+        })
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 @login_required
 def get_thread(request, message_id):
