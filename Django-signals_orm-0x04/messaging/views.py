@@ -119,7 +119,14 @@ def get_message_replies(request, message_id):
 @login_required
 def inbox(request):
     """Display user's unread messages"""
-    unread_messages = Message.unread.get_unread_for_user(request.user)
+    # Use unread manager and optimize with .only()
+    unread_messages = Message.unread.get_unread_for_user(user=request.user).only(
+        'id',
+        'sender__username',
+        'content',
+        'timestamp',
+        'is_read'
+    )
     
     messages_data = [{
         'id': msg.id,
@@ -138,3 +145,9 @@ def mark_messages_read(request):
         Message.unread.mark_as_read(message_ids, request.user)
         return JsonResponse({'status': 'success'})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+@login_required
+def get_unread_count(request):
+    """Get count of unread messages"""
+    count = Message.unread.get_unread_for_user(user=request.user).only('id').count()
+    return JsonResponse({'unread_count': count})
