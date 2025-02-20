@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from mptt.models import MPTTModel, TreeForeignKey
+from .managers import UnreadMessagesManager
 
 class Message(MPTTModel):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
@@ -20,6 +21,10 @@ class Message(MPTTModel):
         blank=True,
         related_name='replies'
     )
+
+    # Add the custom manager
+    objects = models.Manager()
+    unread = UnreadMessagesManager()
 
     class MPTTMeta:
         order_insertion_by = ['timestamp']

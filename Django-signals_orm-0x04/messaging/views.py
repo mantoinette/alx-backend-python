@@ -115,3 +115,31 @@ def get_message_replies(request, message_id):
         })
     except Message.DoesNotExist:
         return JsonResponse({'error': 'Message not found'}, status=404)
+
+@login_required
+def inbox(request):
+    """Display user's unread messages"""
+    unread_messages = Message.unread.get_unread_for_user(request.user).only(
+        'id',
+        'sender__username',
+        'content',
+        'timestamp'
+    )
+    
+    messages_data = [{
+        'id': msg.id,
+        'sender': msg.sender.username,
+        'content': msg.content,
+        'timestamp': msg.timestamp
+    } for msg in unread_messages]
+    
+    return JsonResponse({'unread_messages': messages_data})
+
+@login_required
+def mark_messages_read(request):
+    """Mark multiple messages as read"""
+    if request.method == 'POST':
+        message_ids = request.POST.getlist('message_ids')
+        Message.unread.mark_as_read(message_ids, request.user)
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'error': 'Invalid request'}, status=400)
