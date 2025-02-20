@@ -119,12 +119,7 @@ def get_message_replies(request, message_id):
 @login_required
 def inbox(request):
     """Display user's unread messages"""
-    unread_messages = Message.unread.get_unread_for_user(request.user).only(
-        'id',
-        'sender__username',
-        'content',
-        'timestamp'
-    )
+    unread_messages = Message.unread.get_unread_for_user(request.user)
     
     messages_data = [{
         'id': msg.id,
