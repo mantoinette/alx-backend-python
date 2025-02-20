@@ -1,14 +1,17 @@
 from django.contrib import admin
-from .models import Message, Notification
+from .models import Message, MessageHistory
+
+class MessageHistoryInline(admin.TabularInline):
+    model = MessageHistory
+    readonly_fields = ('edited_at', 'edited_by', 'old_content')
+    extra = 0
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('sender', 'receiver', 'content', 'timestamp', 'is_read')
-    list_filter = ('is_read', 'timestamp')
-    search_fields = ('sender__username', 'receiver__username', 'content')
+    list_display = ('sender', 'receiver', 'content', 'timestamp', 'edited', 'last_edited')
+    inlines = [MessageHistoryInline]
 
-@admin.register(Notification)
-class NotificationAdmin(admin.ModelAdmin):
-    list_display = ('user', 'message', 'created_at', 'is_read')
-    list_filter = ('is_read', 'created_at')
-    search_fields = ('user__username',)
+@admin.register(MessageHistory)
+class MessageHistoryAdmin(admin.ModelAdmin):
+    list_display = ('message', 'edited_at', 'edited_by')
+    readonly_fields = ('message', 'edited_at', 'edited_by', 'old_content')
