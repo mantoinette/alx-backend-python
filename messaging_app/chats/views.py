@@ -4,6 +4,10 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import cache_page
+from django.http import JsonResponse
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -68,3 +72,43 @@ class MessageViewSet(viewsets.ModelViewSet):
             {"error": "Messages must be created via a conversation."},
             status=status.HTTP_405_METHOD_NOT_ALLOWED,
         )
+
+@login_required
+@cache_page(60)  # Cache for 60 seconds
+def conversation_messages(request, conversation_id):
+    """Display messages in a conversation"""
+    messages = (
+        Message.objects
+        .filter(conversation_id=conversation_id)
+        .select_related('sender')
+        .order_by('timestamp')
+    )
+    
+    messages_data = [{
+        'id': msg.id,
+        'sender': msg.sender.username,
+        'content': msg.content,
+        'timestamp': msg.timestamp.isoformat(),
+        'is_read': msg.is_read
+    } for msg in messages]
+    
+    return JsonResponse({
+        'conversation_id': conversation_id,
+        'messages': messages_data
+    })
+
+@login_required
+def send_message(request, conversation_id):
+    """Send a new message (not cached)"""
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        message = Message.objects.create(
+            conversation_id=conversation_id,
+            sender=request.user,
+            content=content
+        )
+        return JsonResponse({
+            'status': 'success',
+            'message_id': message.id
+        })
+    return JsonResponse({'error': 'Invalid request'}, status=400)
