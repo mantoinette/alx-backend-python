@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import cache_page
 from django.http import JsonResponse
+from .auth import IsMessageOwner, IsConversationParticipant
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -19,6 +20,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]  # Add filters
     search_fields = ["participants__username"]  # Search by participant username
     ordering_fields = ["created_at", "updated_at"]  # Order by timestamps
+    permission_classes = [IsAuthenticated, IsConversationParticipant]
 
     def create(self, request, *args, **kwargs):
         participant_ids = request.data.get("participant_ids", [])
@@ -66,6 +68,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]  # Add filters
     search_fields = ["sender__username", "conversation__id"]  # Search by sender or conversation
     ordering_fields = ["created_at"]  # Order by creation time
+    permission_classes = [IsAuthenticated, IsMessageOwner]
 
     def create(self, request, *args, **kwargs):
         return Response(
