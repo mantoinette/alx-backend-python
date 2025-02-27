@@ -1,0 +1,158 @@
+[33m1e10e27[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m Add kurbeScript to set up and manage local Kubernetes cluster
+[33mbafa408[m changing same file
+[33m7b9ce89[m  additional authentication-related functionality
+[33m4013375[m  adding cache page
+[33m35927c5[m  still debug
+[33mf687df8[m  debuging
+[33mb901a59[m  what erro!
+[33meaac21c[m  still debug
+[33m1b9aaad[m  debug
+[33m8117699[m  still working on the message model
+[33m0cc01f3[m  redebug
+[33m53441d0[m  debug
+[33m74b09f0[m  working on same file
+[33m7dcde06[m  debuging
+[33mcd51b39[m working on view file
+[33mc0e41b7[m  working on same errors
+[33m4a41b99[m working on the django chat
+[33m9e09c04[m  working on the Message model with edit tracking fields
+[33m4a563fd[m  working on the django signals
+[33mde7cd82[m Add custom permissions for messaging app
+[33mffc25db[m Add JWT authentication implementation
+[33m063743f[m  working on sameerrors
+[33m68613a9[m  working on the docker file
+[33m4befe04[m working on the ssh
+[33m800d30b[m  workin on the docker file
+[33m800c920[m what error!
+[33m6ddfe20[m  fixing same error
+[33mde89242[m Update urls.py
+[33mbc9ec9c[m  fixing samething
+[33mba63235[m Merge remote-tracking branch 'origin/main'
+[33m90d19e8[m  fixing same error
+[33m0ac7c41[m Update urls.py
+[33m342db84[m  working on the same error in url file in chats app
+[33m6221fcd[m  working on the nested router
+[33mc8aec98[m  working on the same error
+[33m99cadfb[m  working on sameerrors
+[33mff0661c[m  working on the same errors
+[33m6fea9ba[m  working on the same error in the url file
+[33mdaff250[m  debugig same error
+[33m918009b[m  working on view form
+[33ma104079[m  debuging same errors
+[33m4605137[m working a serializer
+[33m1ce3c2e[m  updating hte model file
+[33m3a0a673[m  working on the app called chats
+[33m5832bab[m work Django REST Framework Configuration
+[33m46ca3f2[m Merge remote-tracking branch 'origin/main'
+[33m65ac385[m Initialize Django project and install Django REST Framework
+[33m27f307a[m Update test_utils.py
+[33m51680af[m Update test_utils.py
+[33me176a9d[m Update test_utils.py
+[33m62b2133[m Update test_utils.py
+[33mba9ea95[m Update test_utils.py
+[33mb4ba1fe[m Create utils.py
+[33mb186873[m Update test_utils.py
+[33m1b21b42[m Update test_utils.py
+[33mfe498eb[m Update test_utils.py
+[33m84efa04[m Update test_utils.py
+[33m65d671b[m Update test_utils.py
+[33m25b3a50[m Update test_utils.py
+[33m5939133[m Update test_client.py
+[33m9996896[m Update test_client.py
+[33m66cf811[m Update test_client.py
+[33ma54c7d4[m Update test_client.py
+[33m97c70f2[m Update test_client.py
+[33m087786f[m Update test_client.py
+[33m762a701[m Update test_client.py
+[33m038cc44[m Update test_client.py
+[33m87571b8[m Update test_client.py
+[33mcdb9fe6[m Update test_client.py
+[33m4902eaa[m Update test_utils.py
+[33mb2f4212[m Update test_client.py
+[33m47defbe[m Update test_client.py
+[33m5dd7327[m Update test_client.py
+[33mee180e6[m Update test_client.py
+[33me7a952f[m Update test_client.py
+[33m9fdd1e1[m Update test_client.py
+[33m9a97e51[m Update test_client.py
+[33md1318b2[m Update test_client.py
+[33m9d277da[m Update test_client.py
+[33m14eb1e6[m Update test_client.py
+[33m06168c0[m Update test_client.py
+[33m4298b41[m Update test_client.py
+[33mcf18f75[m Update test_client.py
+[33m125878c[m Update test_client.py
+[33m724dc3a[m Update test_client.py
+[33m1c24392[m Update test_client.py
+[33m65b0ca2[m Update test_client.py
+[33mf37e7b8[m Update test_client.py
+[33m858cf0a[m Update test_client.py
+[33mf7cc843[m Update test_client.py
+[33md4e4236[m Update test_client.py
+[33m9c9fe6e[m Update test_client.py
+[33m2b0e2f4[m Create test_client.py
+[33m20f0437[m Delete test_client.py
+[33m12f1993[m Create test_client.py
+[33m49b3abe[m Your commit message
+[33m33d0ec0[m  working on the test client
+[33m0d4d52d[m Update test_utils.py
+[33m404b507[m Update test_utils.py
+[33m39c8a97[m Update test_utils.py
+[33m2a5cdce[m Update test_utils.py
+[33m7526f4b[m Update test_utils.py
+[33m0ddf418[m Update test_utils.py
+[33maed0392[m Update test_utils.py
+[33m0e32a7e[m Update test_utils.py
+[33m2f6b018[m Update test_utils.py
+[33m7eaf1a6[m Update test_utils.py
+[33m756ebaa[m Update test_utils.py
+[33md755a87[m Update test_utils.py
+[33m7c746f4[m Update test_utils.py
+[33m29ee486[m Update test_utils.py
+[33m08e3727[m Update test_utils.py
+[33m5090312[m Update test_utils.py
+[33m0eb78f6[m Update test_utils.py
+[33mc32b18b[m Update test_utils.py
+[33m76beb76[m Update test_utils.py
+[33mdf74cfe[m Update test_utils.py
+[33m8c2c005[m Update test_utils.py
+[33m5b71729[m  debug same errors
+[33m0412f2c[m  debuging same errors
+[33m99836a5[m Update test_utils.py
+[33ma0bd762[m Update test_utils.py
+[33m627bd1d[m Update test_utils.py
+[33m64d864e[m working on the same errors
+[33m0942955[m  debugs same errors
+[33m40cb640[m debuging same errors
+[33m516861a[m  still working on the same errors
+[33md91f234[m  working on the same errors
+[33m0e621bd[m  working on same errors
+[33m2a57e35[m  debug same errors
+[33m28897e4[m working on decorator
+[33m4c051e9[m  debug same errors
+[33m9301d6f[m  working on the same errors
+[33m6e391df[m  working on the unit test and integration test
+[33ma1f24ba[m  working on the database
+[33m043bd11[m  working on selecting all user greater than 25 years
+[33m37739d5[m  working on the managing database
+[33m583c6b8[m  working on managing database
+[33mc81d134[m working on same errers
+[33m5216413[m  working on the decorator
+[33mce0c61b[m  working on the decorator
+[33m917fbb2[m  still working on the decorator
+[33mdb11222[m working on the same errors
+[33m7b0f045[m working on same errors
+[33m761da93[m  working on the python decorator
+[33m78060a4[m working on pyhton decorator
+[33mf10ac10[m  working on the python decorator
+[33mfbdc812[m working on decorator
+[33m00d422e[m  working on generator
+[33m15033cb[m  working on pagination
+[33m60df9f8[m working on same error
+[33m65edc2c[m working on the fetching data
+[33mdcb0320[m  working on fetching data
+[33me7530e3[m  working on how can i fetch data in betch size
+[33ma3b4926[m Update 0-stream_users.py
+[33m5a0ed3f[m  working on the how can fetch the data in bactch file
+[33m0079c99[m i am working on the fetching data
+[33m629bfb5[m  I am workin g on the python generator
