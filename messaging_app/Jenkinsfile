@@ -1,0 +1,135 @@
+pipeline {
+    agent any
+    
+    environment {
+        // Python virtual environment
+        VENV = isUnix() ? "${WORKSPACE}/venv" : "${WORKSPACE}\\venv"
+        PYTHON_VERSION = '3.8'  // Specify your Python version
+    }
+    
+    options {
+        // Add timestamps to console output
+        timestamps()
+        // Discard old builds
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                // Clean workspace before build
+                cleanWs()
+                // Checkout code from GitHub repository
+                checkout scm
+            }
+        }
+        
+        stage('Setup Python Environment') {
+            steps {
+                script {
+                    try {
+                        if (isUnix()) {
+                            sh """
+                                python${PYTHON_VERSION} -m venv ${VENV}
+                                . ${VENV}/bin/activate
+                                python --version
+                            """
+                        } else {
+                            bat """
+                                python -m venv ${VENV}
+                                ${VENV}\\Scripts\\activate.bat
+                                python --version
+                            """
+                        }
+                    } catch (Exception e) {
+                        error "Failed to create virtual environment: ${e.message}"
+                    }
+                }
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    try {
+                        if (isUnix()) {
+                            sh """
+                                . ${VENV}/bin/activate
+                                pip install --upgrade pip
+                                pip install -r requirements.txt
+                                pip install pytest pytest-html pytest-cov
+                            """
+                        } else {
+                            bat """
+                                ${VENV}\\Scripts\\activate.bat
+                                python -m pip install --upgrade pip
+                                pip install -r requirements.txt
+                                pip install pytest pytest-html pytest-cov
+                            """
+                        }
+                    } catch (Exception e) {
+                        error "Failed to install dependencies: ${e.message}"
+                    }
+                }
+            }
+        }
+        
+        stage('Run Tests') {
+            steps {
+                script {
+                    try {
+                        if (isUnix()) {
+                            sh """
+                                . ${VENV}/bin/activate
+                                pytest --html=test-reports/report.html --self-contained-html --cov=. --cov-report=html
+                            """
+                        } else {
+                            bat """
+                                ${VENV}\\Scripts\\activate.bat
+                                pytest --html=test-reports/report.html --self-contained-html --cov=. --cov-report=html
+                            """
+                        }
+                    } catch (Exception e) {
+                        error "Tests failed: ${e.message}"
+                    }
+                }
+            }
+            post {
+                always {
+                    // Archive the test reports
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'test-reports',
+                        reportFiles: 'report.html',
+                        reportName: 'Test Report'
+                    ])
+                    
+                    // Archive coverage reports
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'htmlcov',
+                        reportFiles: 'index.html',
+                        reportName: 'Coverage Report'
+                    ])
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+        always {
+            // Clean up workspace after build
+            cleanWs()
+        }
+    }
+} 
