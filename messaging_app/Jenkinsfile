@@ -2,16 +2,8 @@ pipeline {
     agent any
     
     environment {
-        // Python virtual environment
-        VENV = isUnix() ? "${WORKSPACE}/venv" : "${WORKSPACE}\\venv"
-        PYTHON_VERSION = '3.8'  // Specify your Python version
-    }
-    
-    options {
-        // Add timestamps to console output
-        timestamps()
-        // Discard old builds
-        buildDiscarder(logRotator(numToKeepStr: '10'))
+        // GitHub credentials
+        GITHUB_CREDS = credentials('github-credentials')
     }
     
     stages {
@@ -20,55 +12,29 @@ pipeline {
                 // Clean workspace before build
                 cleanWs()
                 // Checkout code from GitHub repository
-                checkout scm
+                git branch: 'main',
+                    credentialsId: 'github-credentials',
+                    url: 'https://github.com/${GITHUB_CREDS_USR}/alx-backend-python.git'
             }
         }
         
-        stage('Setup Python Environment') {
+        stage('Setup Python') {
             steps {
-                script {
-                    try {
-                        if (isUnix()) {
-                            sh """
-                                python${PYTHON_VERSION} -m venv ${VENV}
-                                . ${VENV}/bin/activate
-                                python --version
-                            """
-                        } else {
-                            bat """
-                                python -m venv ${VENV}
-                                ${VENV}\\Scripts\\activate.bat
-                                python --version
-                            """
-                        }
-                    } catch (Exception e) {
-                        error "Failed to create virtual environment: ${e.message}"
-                    }
+                // Use ShiningPanda plugin to set up Python
+                withPythonEnv('python3') {
+                    sh '''
+                        python --version
+                        pip install --upgrade pip
+                    '''
                 }
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                script {
-                    try {
-                        if (isUnix()) {
-                            sh """
-                                . ${VENV}/bin/activate
-                                pip install --upgrade pip
-                                pip install -r requirements.txt
-                                pip install pytest pytest-html pytest-cov
-                            """
-                        } else {
-                            bat """
-                                ${VENV}\\Scripts\\activate.bat
-                                python -m pip install --upgrade pip
-                                pip install -r requirements.txt
-                                pip install pytest pytest-html pytest-cov
-                            """
-                        }
-                    } catch (Exception e) {
-                        error "Failed to install dependencies: ${e.message}"
+                withPythonEnv('python3') {
+                    dir('messaging_app') {
+                        sh 'pip install -r requirements.txt'
                     }
                 }
             }
@@ -76,42 +42,39 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                script {
-                    try {
-                        if (isUnix()) {
-                            sh """
-                                . ${VENV}/bin/activate
-                                pytest --html=test-reports/report.html --self-contained-html --cov=. --cov-report=html
-                            """
-                        } else {
-                            bat """
-                                ${VENV}\\Scripts\\activate.bat
-                                pytest --html=test-reports/report.html --self-contained-html --cov=. --cov-report=html
-                            """
-                        }
-                    } catch (Exception e) {
-                        error "Tests failed: ${e.message}"
+                withPythonEnv('python3') {
+                    dir('messaging_app') {
+                        // Create directory for test reports
+                        sh '''
+                            mkdir -p test-reports
+                            python -m pytest \
+                                --html=test-reports/report.html \
+                                --self-contained-html \
+                                --cov=messaging_app \
+                                --cov-report=html \
+                                messaging_app/tests/
+                        '''
                     }
                 }
             }
             post {
                 always {
-                    // Archive the test reports
+                    // Publish test report
                     publishHTML([
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'test-reports',
+                        reportDir: 'messaging_app/test-reports',
                         reportFiles: 'report.html',
                         reportName: 'Test Report'
                     ])
                     
-                    // Archive coverage reports
+                    // Publish coverage report
                     publishHTML([
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
                         keepAll: true,
-                        reportDir: 'htmlcov',
+                        reportDir: 'messaging_app/htmlcov',
                         reportFiles: 'index.html',
                         reportName: 'Coverage Report'
                     ])
@@ -128,7 +91,6 @@ pipeline {
             echo 'Pipeline failed!'
         }
         always {
-            // Clean up workspace after build
             cleanWs()
         }
     }
