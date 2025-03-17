@@ -14,27 +14,45 @@ pipeline {
                 // Checkout code from GitHub repository
                 git branch: 'main',
                     credentialsId: 'github-credentials',
-                    url: 'https://github.com/${GITHUB_CREDS_USR}/alx-backend-python.git'
+                    url: 'https://github.com/mushimiyimana/alx-backend-python.git'
             }
         }
         
         stage('Setup Python') {
             steps {
-                // Use ShiningPanda plugin to set up Python
-                withPythonEnv('python3') {
-                    sh '''
-                        python --version
-                        pip install --upgrade pip
-                    '''
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            python3 -m venv venv
+                            . venv/bin/activate
+                            python --version
+                        '''
+                    } else {
+                        bat '''
+                            python -m venv venv
+                            .\\venv\\Scripts\\activate.bat
+                            python --version
+                        '''
+                    }
                 }
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                withPythonEnv('python3') {
-                    dir('messaging_app') {
-                        sh 'pip install -r requirements.txt'
+                script {
+                    if (isUnix()) {
+                        sh '''
+                            . venv/bin/activate
+                            pip install -r messaging_app/requirements.txt
+                            pip install pytest pytest-html pytest-cov
+                        '''
+                    } else {
+                        bat '''
+                            .\\venv\\Scripts\\activate.bat
+                            pip install -r messaging_app\\requirements.txt
+                            pip install pytest pytest-html pytest-cov
+                        '''
                     }
                 }
             }
@@ -42,24 +60,24 @@ pipeline {
         
         stage('Run Tests') {
             steps {
-                withPythonEnv('python3') {
-                    dir('messaging_app') {
-                        // Create directory for test reports
+                script {
+                    if (isUnix()) {
                         sh '''
-                            mkdir -p test-reports
-                            python -m pytest \
-                                --html=test-reports/report.html \
-                                --self-contained-html \
-                                --cov=messaging_app \
-                                --cov-report=html \
-                                messaging_app/tests/
+                            . venv/bin/activate
+                            cd messaging_app
+                            python -m pytest --html=test-reports/report.html --self-contained-html --cov=messaging_app messaging_app/tests/
+                        '''
+                    } else {
+                        bat '''
+                            .\\venv\\Scripts\\activate.bat
+                            cd messaging_app
+                            python -m pytest --html=test-reports/report.html --self-contained-html --cov=messaging_app messaging_app/tests/
                         '''
                     }
                 }
             }
             post {
                 always {
-                    // Publish test report
                     publishHTML([
                         allowMissing: false,
                         alwaysLinkToLastBuild: true,
@@ -67,16 +85,6 @@ pipeline {
                         reportDir: 'messaging_app/test-reports',
                         reportFiles: 'report.html',
                         reportName: 'Test Report'
-                    ])
-                    
-                    // Publish coverage report
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'messaging_app/htmlcov',
-                        reportFiles: 'index.html',
-                        reportName: 'Coverage Report'
                     ])
                 }
             }
