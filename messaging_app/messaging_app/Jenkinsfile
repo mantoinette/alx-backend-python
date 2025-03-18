@@ -25,19 +25,17 @@ pipeline {
                         sh '''
                             python3 -m venv venv
                             . venv/bin/activate
-                            python --version
-                            python -m pip install --upgrade pip
-                            python -m pip install -r messaging_app/requirements.txt
-                            python -m pip install pytest pytest-html pytest-cov
+                            pip3 install --upgrade pip
+                            pip3 install pytest pytest-html pytest-cov
+                            pip3 install -r messaging_app/requirements.txt
                         '''
                     } else {
                         bat '''
                             python -m venv venv
                             .\\venv\\Scripts\\activate.bat
-                            python --version
-                            python -m pip install --upgrade pip
-                            python -m pip install -r messaging_app\\requirements.txt
-                            python -m pip install pytest pytest-html pytest-cov
+                            pip3 install --upgrade pip
+                            pip3 install pytest pytest-html pytest-cov
+                            pip3 install -r messaging_app\\requirements.txt
                         '''
                     }
                 }
@@ -52,20 +50,18 @@ pipeline {
                             . venv/bin/activate
                             cd messaging_app
                             mkdir -p test-reports
-                            python -m pytest \
+                            pytest messaging_app/tests/ \
                                 --html=test-reports/report.html \
-                                --self-contained-html \
-                                messaging_app/tests/
+                                --self-contained-html
                         '''
                     } else {
                         bat '''
                             .\\venv\\Scripts\\activate.bat
                             cd messaging_app
                             if not exist test-reports mkdir test-reports
-                            python -m pytest ^
+                            pytest messaging_app\\tests\\ ^
                                 --html=test-reports\\report.html ^
-                                --self-contained-html ^
-                                messaging_app\\tests\\
+                                --self-contained-html
                         '''
                     }
                 }
