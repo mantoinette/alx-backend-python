@@ -26,12 +26,14 @@ pipeline {
                             python3 -m venv venv
                             . venv/bin/activate
                             python --version
+                            pip install --upgrade pip
                         '''
                     } else {
                         bat '''
                             python -m venv venv
                             .\\venv\\Scripts\\activate.bat
                             python --version
+                            python -m pip install --upgrade pip
                         '''
                     }
                 }
@@ -44,14 +46,14 @@ pipeline {
                     if (isUnix()) {
                         sh '''
                             . venv/bin/activate
-                            pip install -r messaging_app/requirements.txt
-                            pip install pytest pytest-html pytest-cov
+                            cd messaging_app
+                            pip install -r requirements.txt
                         '''
                     } else {
                         bat '''
                             .\\venv\\Scripts\\activate.bat
-                            pip install -r messaging_app\\requirements.txt
-                            pip install pytest pytest-html pytest-cov
+                            cd messaging_app
+                            pip install -r requirements.txt
                         '''
                     }
                 }
@@ -65,13 +67,21 @@ pipeline {
                         sh '''
                             . venv/bin/activate
                             cd messaging_app
-                            python -m pytest --html=test-reports/report.html --self-contained-html --cov=messaging_app messaging_app/tests/
+                            mkdir -p test-reports
+                            pytest messaging_app/tests/ \
+                                --html=test-reports/report.html \
+                                --self-contained-html \
+                                -v
                         '''
                     } else {
                         bat '''
                             .\\venv\\Scripts\\activate.bat
                             cd messaging_app
-                            python -m pytest --html=test-reports/report.html --self-contained-html --cov=messaging_app messaging_app/tests/
+                            mkdir test-reports
+                            pytest messaging_app\\tests\\ ^
+                                --html=test-reports\\report.html ^
+                                --self-contained-html ^
+                                -v
                         '''
                     }
                 }
@@ -102,4 +112,4 @@ pipeline {
             cleanWs()
         }
     }
-} 
+}
