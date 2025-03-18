@@ -26,7 +26,9 @@ pipeline {
                             python3 -m venv venv
                             . venv/bin/activate
                             python --version
-                            pip install --upgrade pip
+                            python -m pip install --upgrade pip
+                            python -m pip install -r messaging_app/requirements.txt
+                            python -m pip install pytest pytest-html pytest-cov
                         '''
                     } else {
                         bat '''
@@ -34,26 +36,8 @@ pipeline {
                             .\\venv\\Scripts\\activate.bat
                             python --version
                             python -m pip install --upgrade pip
-                        '''
-                    }
-                }
-            }
-        }
-        
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    if (isUnix()) {
-                        sh '''
-                            . venv/bin/activate
-                            cd messaging_app
-                            pip install -r requirements.txt
-                        '''
-                    } else {
-                        bat '''
-                            .\\venv\\Scripts\\activate.bat
-                            cd messaging_app
-                            pip install -r requirements.txt
+                            python -m pip install -r messaging_app\\requirements.txt
+                            python -m pip install pytest pytest-html pytest-cov
                         '''
                     }
                 }
@@ -68,20 +52,20 @@ pipeline {
                             . venv/bin/activate
                             cd messaging_app
                             mkdir -p test-reports
-                            pytest messaging_app/tests/ \
+                            python -m pytest \
                                 --html=test-reports/report.html \
                                 --self-contained-html \
-                                -v
+                                messaging_app/tests/
                         '''
                     } else {
                         bat '''
                             .\\venv\\Scripts\\activate.bat
                             cd messaging_app
-                            mkdir test-reports
-                            pytest messaging_app\\tests\\ ^
+                            if not exist test-reports mkdir test-reports
+                            python -m pytest ^
                                 --html=test-reports\\report.html ^
                                 --self-contained-html ^
-                                -v
+                                messaging_app\\tests\\
                         '''
                     }
                 }
