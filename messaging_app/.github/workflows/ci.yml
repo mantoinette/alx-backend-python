@@ -35,30 +35,25 @@ jobs:
     - name: Install Dependencies
       run: |
         python -m pip install --upgrade pip
-        cd messaging_app
-        pip3 install -r requirements.txt
-        pip3 install pytest pytest-django pytest-cov mysqlclient
+        pip install -r requirements.txt
+        pip install pytest pytest-django pytest-cov mysqlclient
 
     - name: Run Tests
       env:
         DATABASE_URL: mysql://root:root@127.0.0.1:3306/test_db
       run: |
-        cd messaging_app
-        python -m pytest messaging_app/tests/ \
-          --html=test-reports/report.html \
-          --self-contained-html \
-          --cov=messaging_app
+        python -m pytest tests/ --cov=.
 
     - name: Upload Test Results
       uses: actions/upload-artifact@v2
       with:
         name: test-results
-        path: messaging_app/test-reports/
+        path: test-reports/
       if: always()
 
     - name: Upload Coverage Results
       uses: actions/upload-artifact@v2
       with:
         name: coverage-results
-        path: messaging_app/htmlcov/
+        path: htmlcov/
       if: always()
