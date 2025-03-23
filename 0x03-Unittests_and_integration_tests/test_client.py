@@ -10,19 +10,20 @@ class TestGithubOrgClient(unittest.TestCase):
     """Test class for GithubOrgClient"""
 
     @parameterized.expand([
-        "google",
-        "abc"
+        ("google",),
+        ("abc",),
     ])
-    def test_org(self, org_name):
+    @patch('client.get_json')
+    def test_org(self, org_name, mock_get):
         """Test that GithubOrgClient.org returns the correct value"""
         test_client = GithubOrgClient(org_name)
-        with patch('client.get_json') as mock_get:
-            test_client.org()
-            mock_get.assert_called_once_with(
-                f"https://api.github.com/orgs/{org_name}"
-            )
+        mock_get.return_value = {"name": org_name}
+        result = test_client.org()
+        self.assertEqual(result, {"name": org_name})
+        mock_get.assert_called_once_with(
+            f"https://api.github.com/orgs/{org_name}"
+        )
 
 
 if __name__ == '__main__':
     unittest.main()
-    
