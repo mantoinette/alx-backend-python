@@ -4,7 +4,6 @@ import unittest
 from unittest.mock import patch, PropertyMock
 from parameterized import parameterized
 from client import GithubOrgClient
-from utils import get_json
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -58,9 +57,9 @@ class TestGithubOrgClient(unittest.TestCase):
             test_client = GithubOrgClient("test")
             result = test_client.public_repos()
 
-            self.assertEqual(result, ["repo1", "repo2"])
             mock_get_json.assert_called_once_with("test_url")
             mock_public_repos_url.assert_called_once()
+            self.assertEqual(result, ["repo1", "repo2"])
 
 
 if __name__ == '__main__':
