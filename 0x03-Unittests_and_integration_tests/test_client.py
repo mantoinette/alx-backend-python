@@ -13,14 +13,18 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google",),
         ("abc",),
     ])
-    def test_org(self, org):
+    @patch('client.get_json')
+    def test_org(self, org_name, mock_get_json):
         """Test that GithubOrgClient.org returns the correct value"""
-        with patch('client.get_json') as mock_get:
-            test_client = GithubOrgClient(org)
-            test_client.org()
-            mock_get.assert_called_once_with(
-                f'https://api.github.com/orgs/{org}'
-            )
+        test_client = GithubOrgClient(org_name)
+        # Configure mock to return a specific value
+        mock_get_json.return_value = {"org": True}
+        # Call org method and check the result
+        self.assertEqual(test_client.org(), {"org": True})
+        # Check if get_json was called exactly once with correct URL
+        mock_get_json.assert_called_once_with(
+            f"https://api.github.com/orgs/{org_name}"
+        )
 
 
 if __name__ == '__main__':
