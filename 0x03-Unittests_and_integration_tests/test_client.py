@@ -61,6 +61,28 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_public_repos_url.assert_called_once()
             self.assertEqual(result, ["repo1", "repo2"])
 
+    @patch('client.get_json')
+    def test_public_repos_with_license(self, mock_get_json):
+        """Test the public_repos method with a specific license"""
+        test_payload = [
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+            {"name": "repo3", "license": {"key": "apache-2.0"}},
+        ]
+        mock_get_json.return_value = test_payload
+
+        with patch(
+            'client.GithubOrgClient._public_repos_url',
+            new_callable=PropertyMock
+        ) as mock_public_repos_url:
+            mock_public_repos_url.return_value = "test_url"
+            test_client = GithubOrgClient("test")
+            result = test_client.public_repos(license="apache-2.0")
+
+            mock_get_json.assert_called_once_with("test_url")
+            mock_public_repos_url.assert_called_once()
+            self.assertEqual(result, ["repo1", "repo3"])
+
 
 if __name__ == '__main__':
     unittest.main()
