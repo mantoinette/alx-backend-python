@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import patch, PropertyMock
 from utils import get_json, access_nested_map
 from parameterized import parameterized, parameterized_class
-from client import GithubOrgClient
+from .client import GithubOrgClient
 import utils  # Ensure utils is properly imported
 
 
