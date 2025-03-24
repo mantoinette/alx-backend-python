@@ -22,6 +22,18 @@ class GithubOrgClient:
         repos_data = self.get_json(repos_url)
         return [repo["name"] for repo in repos_data]
 
+    def public_repos_with_license(self, license_type):
+        """Return a list of public repositories with a specific license."""
+        repos = self.public_repos()  # Get the list of repos
+        return [repo["name"] for repo in repos if repo["license"]["key"] == license_type]
+
+    def get_json(self, url):
+        """Helper method to fetch JSON data from the given URL."""
+        response = requests.get(url)
+        return response.json()
+    repos_data = self.get_json(repos_url)
+        return [repo["name"] for repo in repos_data]
+
     def get_json(self, url):
         """Helper method to fetch JSON data from the given URL."""
         response = requests.get(url)
