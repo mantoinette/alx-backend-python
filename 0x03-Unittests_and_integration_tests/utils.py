@@ -29,3 +29,13 @@ def access_nested_map(nested_map: Dict[str, Any], path: List[str]) -> Any:
             raise KeyError(f"Key '{key}' not found in nested map")
         nested_map = nested_map[key]
     return nested_map
+
+
+def memoize(fn):
+    """Memoization decorator to cache results."""
+    cache = {}
+    def wrapper(*args):
+        if args not in cache:
+            cache[args] = fn(*args)
+        return cache[args]
+    return wrapper
