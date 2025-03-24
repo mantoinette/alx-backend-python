@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch, PropertyMock
 from utils import get_json, access_nested_map
-from parameterized import parameterized, parameterized_class
+from parameterized import parameterized
 from .client import GithubOrgClient
 import utils  # Ensure utils is properly imported
 
@@ -83,6 +83,18 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_public_repos_url.assert_called_once()
             self.assertEqual(result, ["repo1", "repo3"])
 
+    def test_has_license(self):
+        """Test that repositories have the correct license"""
+        # Assuming 'public_repos' method returns the list of repositories
+        repos = [
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+        ]
+        # You can use mock to simulate your `public_repos` method returning the above repos
+        test_client = GithubOrgClient("test")
+        result = test_client.public_repos_with_license("apache-2.0")
+        self.assertTrue(all(repo["license"]["key"] == "apache-2.0" for repo in repos if repo["name"] in result))
+        self.assertEqual(result, ["repo1"])
 
 if __name__ == '__main__':
     unittest.main()
