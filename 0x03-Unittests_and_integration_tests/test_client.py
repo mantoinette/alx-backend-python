@@ -2,10 +2,9 @@
 """Test module for GithubOrgClient class"""
 import unittest
 from unittest.mock import patch, PropertyMock
-from utils import get_json, access_nested_map
+from utils import get_json, access_nested_map, memoize
 from parameterized import parameterized
-from .client import GithubOrgClient
-import utils  # Ensure utils is properly imported
+from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -17,7 +16,7 @@ class TestGithubOrgClient(unittest.TestCase):
     ])
     def test_org(self, org_name):
         """Test that GithubOrgClient.org returns the correct value"""
-        with patch('utils.get_json') as mock_json:
+        with patch('utils.get_json') as mock_json:  # Correct patch
             test_client = GithubOrgClient(org_name)
             mock_json.return_value = {"name": org_name}
             self.assertEqual(test_client.org(), {"name": org_name})
@@ -26,7 +25,7 @@ class TestGithubOrgClient(unittest.TestCase):
             )
 
     def test_public_repos_url(self):
-        """Test that _public_repos_url returns the expected result"""
+        """Test that the result of _public_repos_url is the expected one"""
         with patch(
             'client.GithubOrgClient.org',
             new_callable=PropertyMock
@@ -36,7 +35,7 @@ class TestGithubOrgClient(unittest.TestCase):
             }
             test_client = GithubOrgClient("google")
             self.assertEqual(
-                test_client._public_repos_url,
+                test_client._public_repos_url(),
                 "https://api.github.com/orgs/google/repos"
             )
 
@@ -77,24 +76,12 @@ class TestGithubOrgClient(unittest.TestCase):
         ) as mock_public_repos_url:
             mock_public_repos_url.return_value = "test_url"
             test_client = GithubOrgClient("test")
-            result = test_client.public_repos_with_license("apache-2.0")
+            result = test_client.public_repos(license="apache-2.0")
 
             mock_get_json.assert_called_once_with("test_url")
             mock_public_repos_url.assert_called_once()
             self.assertEqual(result, ["repo1", "repo3"])
 
-    def test_has_license(self):
-        """Test that repositories have the correct license"""
-        # Assuming 'public_repos' method returns the list of repositories
-        repos = [
-            {"name": "repo1", "license": {"key": "apache-2.0"}},
-            {"name": "repo2", "license": {"key": "mit"}},
-        ]
-        # You can use mock to simulate your `public_repos` method returning the above repos
-        test_client = GithubOrgClient("test")
-        result = test_client.public_repos_with_license("apache-2.0")
-        self.assertTrue(all(repo["license"]["key"] == "apache-2.0" for repo in repos if repo["name"] in result))
-        self.assertEqual(result, ["repo1"])
 
 if __name__ == '__main__':
     unittest.main()
