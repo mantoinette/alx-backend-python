@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 """Test module for utils.py"""
 import unittest
-from unittest.mock import patch
-import utils
+from utils import access_nested_map
 
 
-class TestUtils(unittest.TestCase):
-    """Test class for utils"""
+class TestAccessNestedMap(unittest.TestCase):
+    """Test class for access_nested_map"""
 
-    @patch('utils.requests.get')
-    def test_get_json(self, mock_get):
-        """Test get_json function"""
-        mock_get.return_value.json.return_value = {"key": "value"}
+    def test_access_nested_map(self):
+        """Test normal cases"""
+        self.assertEqual(access_nested_map({"a": {"b": 2}}, ["a", "b"]), 2)
+        self.assertEqual(access_nested_map({"x": {"y": {"z": 5}}}, ["x", "y", "z"]), 5)
 
-        result = utils.get_json("http://example.com")
-        mock_get.assert_called_once_with("http://example.com")
-        self.assertEqual(result, {"key": "value"})
+    def test_access_nested_map_key_error(self):
+        """Test KeyError when path is missing"""
+        with self.assertRaises(KeyError):
+            access_nested_map({}, ["a"])
+
+        with self.assertRaises(KeyError):
+            access_nested_map({"a": 1}, ["a", "b"])
 
 
 if __name__ == '__main__':
