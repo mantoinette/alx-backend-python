@@ -77,7 +77,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ) as mock_public_repos_url:
             mock_public_repos_url.return_value = "test_url"
             test_client = GithubOrgClient("test")
-            result = test_client.public_repos(license="apache-2.0")
+            result = test_client.public_repos_with_license("apache-2.0")
 
             mock_get_json.assert_called_once_with("test_url")
             mock_public_repos_url.assert_called_once()
