@@ -82,6 +82,21 @@ class TestGithubOrgClient(unittest.TestCase):
             mock_public_repos_url.assert_called_once()
             self.assertEqual(result, ["repo1", "repo3"])
 
+    def test_has_license(self):
+        """Test if the public repo has a specific license"""
+        test_payload = [
+            {"name": "repo1", "license": {"key": "apache-2.0"}},
+            {"name": "repo2", "license": {"key": "mit"}},
+            {"name": "repo3", "license": {"key": "apache-2.0"}},
+        ]
+
+        # Assume the 'public_repos' method would return these repos
+        test_client = GithubOrgClient("test")
+        result = test_client.public_repos(license="apache-2.0")
+
+        # Check if only repositories with 'apache-2.0' license are returned
+        self.assertEqual(result, ["repo1", "repo3"])
+
 
 if __name__ == '__main__':
     unittest.main()
