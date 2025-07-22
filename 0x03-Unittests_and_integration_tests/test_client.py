@@ -14,7 +14,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ("google",),
         ("abc",),
     ])
-    @patch("client.get_json")  # Patch matches the import: from utils import get_json
+    @patch("client.utils.get_json")  # <-- ONLY change is here
     def test_org(self, org_name, mock_get_json):
         """Test that GithubOrgClient.org returns expected payload"""
         expected_payload = {"login": org_name}
