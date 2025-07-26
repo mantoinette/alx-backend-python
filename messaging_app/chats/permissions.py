@@ -1,19 +1,15 @@
-# chats/permissions.py
-
 from rest_framework import permissions
 
 class IsParticipantOfConversation(permissions.BasePermission):
     """
-    Allows access only to authenticated users who are participants in the conversation.
+    Allow only participants to send/view/update/delete messages in a conversation.
     """
 
     def has_permission(self, request, view):
-        # Ensure user is authenticated
         return request.user and request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        # Allow only participants (sender or receiver) to access the object
-        return (
-            obj.sender == request.user or
-            obj.receiver == request.user
-        )
+        # Check if the request is a read or write operation
+        if request.method in ["GET", "POST", "PUT", "PATCH", "DELETE"]:
+            return request.user in obj.conversation.participants.all()
+        return False
