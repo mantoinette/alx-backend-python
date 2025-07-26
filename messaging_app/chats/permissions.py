@@ -2,10 +2,18 @@
 
 from rest_framework import permissions
 
-class IsOwner(permissions.BasePermission):
+class IsParticipantOfConversation(permissions.BasePermission):
     """
-    Custom permission to allow only owners to access their own messages or conversations.
+    Allows access only to authenticated users who are participants in the conversation.
     """
 
+    def has_permission(self, request, view):
+        # Ensure user is authenticated
+        return request.user and request.user.is_authenticated
+
     def has_object_permission(self, request, view, obj):
-        return obj.user == request.user or obj.sender == request.user or obj.receiver == request.user
+        # Allow only participants (sender or receiver) to access the object
+        return (
+            obj.sender == request.user or
+            obj.receiver == request.user
+        )
