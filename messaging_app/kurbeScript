@@ -1,46 +1,22 @@
 #!/bin/bash
+# Script: kurbeScript
+# Purpose: Start Kubernetes cluster, verify it, and list pods.
 
-# kurbeScript: Start Kubernetes cluster, verify, list pods
-
-echo "=== Starting kurbeScript ==="
-
-# Check if Minikube is installed
+# Ensure minikube is installed
 if ! command -v minikube &> /dev/null
 then
-    echo "❌ Minikube is not installed. Please install Minikube first."
+    echo "Minikube is not installed. Please install it first."
     exit 1
-else
-    echo "✅ Minikube is installed: $(minikube version)"
 fi
 
-# Check if kubectl is installed
-if ! command -v kubectl &> /dev/null
-then
-    echo "❌ kubectl is not installed. Please install kubectl first."
-    exit 1
-else
-    echo "✅ kubectl is installed: $(kubectl version --client --short | head -n1)"
-fi
+# Start Kubernetes cluster with minikube
+echo "Starting Minikube cluster..."
+minikube start
 
-# Check if Docker is running
-if ! docker info &> /dev/null
-then
-    echo "❌ Docker does not seem to be running. Please start Docker Desktop."
-    exit 1
-else
-    echo "✅ Docker is running"
-fi
-
-# Start Minikube with Docker driver
-echo "🚀 Starting Minikube with Docker driver..."
-minikube start --driver=docker
-
-# Verify the cluster
-echo "🔎 Verifying Kubernetes cluster..."
+# Verify that the cluster is running
+echo "Verifying cluster status..."
 kubectl cluster-info
 
-# List all pods in all namespaces
-echo "📦 Listing all pods..."
+# Retrieve available pods
+echo "Retrieving available pods..."
 kubectl get pods --all-namespaces
-
-echo "🏁 kurbeScript completed successfully!"
