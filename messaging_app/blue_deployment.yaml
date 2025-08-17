@@ -16,19 +16,6 @@ spec:
     spec:
       containers:
         - name: messaging-app-container
-          image: your-dockerhub-username/messaging-app:latest   # <-- replace with your image
+          image: your-dockerhub-username/messaging-app:2.0
           ports:
-            - containerPort: 8000   # Django runs on 8000 by default
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: messaging-app-service
-spec:
-  selector:
-    app: messaging-app
-  ports:
-    - protocol: TCP
-      port: 8000
-      targetPort: 8000
-  type: ClusterIP   # internal service
+            - containerPort: 8000

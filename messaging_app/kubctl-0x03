@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Extract deployment name from blue_deployment.yaml
+DEPLOYMENT_NAME=$(grep 'name:' blue_deployment.yaml | head -n1 | awk '{print $2}')
+
+echo "Detected deployment name: $DEPLOYMENT_NAME"
+
+# Apply the updated blue deployment
+echo "Applying updated deployment..."
+kubectl apply -f blue_deployment.yaml
+
+# Trigger a rolling update
+echo "Monitoring rollout status..."
+kubectl rollout status deployment/$DEPLOYMENT_NAME
+
+# Test app availability using curl (use port-forward if needed)
+echo "Testing app availability..."
+kubectl port-forward svc/messaging-app-service 8000:8000 &
+PF_PID=$!
+
+# Give port-forward some time to start
+sleep 5
+
+while true; do
+    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000/)
+    echo "$(date): HTTP $HTTP_CODE"
+    sleep 2
+done
+
+# Stop port-forward when script is interrupted
+trap "kill $PF_PID" EXIT
