@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Check if Minikube is installed
 if ! command -v minikube &> /dev/null
 then
@@ -18,4 +17,5 @@ kubectl cluster-info
 # Retrieve all pods
 echo "Retrieving all pods..."
 kubectl get pods -A
+
 
