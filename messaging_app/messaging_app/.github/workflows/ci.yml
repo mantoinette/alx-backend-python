@@ -37,6 +37,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install flake8 coverage
+
+      - name: Run flake8 linting
+        working-directory: messaging_app
+        run: |
+          # Fail if any linting errors are found
+          flake8 . --count --exit-zero --statistics
+          flake8 . --count --exit-code=1
 
       - name: Run migrations
         working-directory: messaging_app
@@ -45,9 +53,17 @@ jobs:
         run: |
           python manage.py migrate
 
-      - name: Run tests
+      - name: Run tests with coverage
         working-directory: messaging_app
         env:
           DATABASE_URL: mysql://root:root@127.0.0.1:3306/test_db
         run: |
-          python manage.py test
+          coverage run --source='.' manage.py test
+          coverage report
+          coverage xml
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: messaging_app/coverage.xml
